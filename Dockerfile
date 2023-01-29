@@ -1,12 +1,3 @@
-FROM golang:1.16.5 AS development
-WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-RUN go install github.com/cespare/reflex@latest
-EXPOSE 4000
-CMD reflex -g '*.go' go run cmd/main.go --start-service
-
 FROM golang:1.16.5 AS builder
 ENV GOOS linux
 ENV CGO_ENABLED 0
@@ -14,10 +5,10 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN go build -o app/cmd
+RUN cd cmd && go build -o .
 
-FROM alpine:latest AS production
+FROM alpine:latest
 RUN apk add --no-cache ca-certificates
 COPY --from=builder app .
 EXPOSE 4000
-CMD ./app
+CMD ./cmd/cmd

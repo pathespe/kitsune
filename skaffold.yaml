@@ -1,0 +1,13 @@
+apiVersion: skaffold/v4beta1
+kind: Config
+metadata:
+  name: kitsune
+build:
+  artifacts:
+  - image: pathespe/kitsune
+    docker:
+      dockerfile: Dockerfile
+manifests:
+  rawYaml:
+  - k8s/deployment.yml
+  - k8s/service.yml
